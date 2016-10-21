@@ -1,5 +1,6 @@
 package DNA;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public abstract class Nucleotide {
      */
     public static Nucleotide fromChar(char stringRepresentation){
         for(Nucleotide ncl : existingNucleotides){
-            if(ncl.toString().equals(""+stringRepresentation))return ncl;
+            if(ncl.toString().equals(Character.toString(stringRepresentation)))return ncl;
         }
         return null;
     }

@@ -4,9 +4,7 @@ import DNA.Nucleotide;
 import DNA.Sequence;
 import util.FastaFileReader;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -101,9 +99,32 @@ public class CommandLine {
         connectedNListAll = connectedNListAll.stream().filter((Integer i) -> i > 0).collect(Collectors.toList()); //Sort out "0"
         int averageExcluding = average(connectedNListAll);
 
+        int averageLength =
+                average(sequenceList.stream().map((l)->l.getNucleotides().size()).collect(Collectors.toList()));
+
         CommandLine.printLn("Shortest Length: "+shortestLength + " (excluding '-'s: "+shortestLengthExcluding + ")");
-        CommandLine.printLn("Average Length: "+0 + " (excluding '-'s: "+averageExcluding + ")");
+        CommandLine.printLn("Average Length: "+ averageLength + " (excluding '-'s: "+averageExcluding + ")");
         CommandLine.printLn("Longest Length: "+longestLength + " (excluding '-'s: "+longestLengthExcluding + ")");
+
+        List<Nucleotide> allNucleotides = new ArrayList<>();
+        for(Sequence seq : sequenceList)allNucleotides.addAll(seq.getNucleotides());
+        Map<String, Integer> numNucleotides = new HashMap<>();
+        for(Nucleotide n : allNucleotides){
+            int num = 0;
+            if(numNucleotides.containsKey(n.toString())){
+               num = numNucleotides.get(n.toString()).intValue() + 1;
+            }else{
+                num = 1;
+            }
+            numNucleotides.put(n.toString(), num);
+        }
+
+        String counts = "Counts: ";
+        for(String name : numNucleotides.keySet()){
+            counts += "'" + name +"' " + numNucleotides.get(name) + ", ";
+        }
+
+        CommandLine.printLn(counts);
     }
 
     private static void printLn(String line){
